@@ -59,7 +59,7 @@ public class Steering extends MyGdxGame {
             }
         }
 
-        if (birdY > 0 || velocity < 0) {
+        if (birdY > 0 || velocity < 0 ) {
             if (birdX <= 2) {
                 bounceLeft();
             }

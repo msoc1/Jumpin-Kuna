@@ -2,7 +2,9 @@ package com.fixed4fun.flappybird;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
@@ -19,20 +21,21 @@ public class MyGdxGame extends ApplicationAdapter {
     private ShapeRenderer shapeRenderer;
     static Texture[] blitzTexture;
 
-
     static Texture[] birds;
     static int flapState = 0;
     static float birdY = 0;
     static float birdX = 0;
     static float velocity = 0;
     int gameState = 0;
-    static float gravity = 1.5f;
+    static float gravity = 1.7f;
 
     private Circle birdCircle;
     static Rectangle[] topTubeRectangles;
     static Rectangle[] bottomTubeRectangles;
 
-
+    static int score = 0;
+    int activeTube;
+    BitmapFont font;
 
     static Texture topTube;
     static Texture bottomTube;
@@ -41,11 +44,10 @@ public class MyGdxGame extends ApplicationAdapter {
     static float screenY =0;
     static float lewoPrawo = 0;
     static float leftOrRight = 0;
-    private float maxTubeOffSet;
+    static float maxTubeOffSet;
     static Random randomGenerator;
 
 
-    static float tubeVelocity = 4;
     static int numberOfTubes =6;
     static float[] tubeX = new float[numberOfTubes];
     static float[] tubeOffset =new float[numberOfTubes];
@@ -66,6 +68,9 @@ public class MyGdxGame extends ApplicationAdapter {
         shapeRenderer = new ShapeRenderer();
         birdCircle = new Circle();
 
+        font = new BitmapFont();
+        font.setColor(Color.WHITE);
+        font.getData().scale(10);
 
 
         blitzTexture = new Texture[6];
@@ -102,9 +107,22 @@ public class MyGdxGame extends ApplicationAdapter {
 
 
         if (gameState != 0) {
-            Steering.hardSteering();
-            Tubes.tubeDraw();
-            drawBlitzCount();
+
+            if(tubeX[activeTube] < birdY){
+                score++;
+                if(activeTube < numberOfTubes-1){
+                    activeTube++;
+                } else {
+                    activeTube =0;
+                }
+            }
+
+            Tubes tubes = new Tubes();
+
+            Steering.easySteering();
+            tubes.tubeDraw();
+            //Tubes.tubeDraw();
+            BirdControls.drawBlitzCount();
 
         } else {
             if (Gdx.input.justTouched()) {
@@ -120,32 +138,31 @@ public class MyGdxGame extends ApplicationAdapter {
         }
 
         batch.draw(birds[flapState], birdX, birdY);
+
+        font.draw(batch, String.valueOf(score), Gdx.graphics.getWidth()/2 - 50, Gdx.graphics.getHeight()-300);
+
+
         batch.end();
         birdCircle.set(birdX+birds[flapState].getWidth()/2, birdY+birds[flapState].getHeight()/2, birds[flapState].getWidth()/2 );
 
+
+       // shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+      //  shapeRenderer.setColor(Color.RED);
+      //  shapeRenderer.circle(birdCircle.x, birdCircle.y, birdCircle.radius);
         for(int i =0; i < numberOfTubes ; i++) {
+
+          //  shapeRenderer.rect(Gdx.graphics.getWidth() / 2 + gap / 2 + tubeOffset[i], tubeX[i], topTube.getWidth(), topTube.getHeight());
+         //   shapeRenderer.rect(Gdx.graphics.getWidth() / 2 - gap / 2 - bottomTube.getWidth() + tubeOffset[i], tubeX[i], bottomTube.getWidth(), bottomTube.getHeight());
 
             if(Intersector.overlaps(birdCircle, topTubeRectangles[i]) ||Intersector.overlaps(birdCircle, bottomTubeRectangles[i])){
              //   Gdx.app.log("collision", "yes");
+              //  gameState=0;
             }
         }
+
+      //  shapeRenderer.end();
     }
 
 
-    private void drawBlitzCount(){
-        long diff = System.currentTimeMillis()-Steering.timeFirstClick;
-        if(diff >= 5000) {
-            batch.draw(blitzTexture[0], 100, 100, 100, 100);
-        } else if(diff >= 4000){
-            batch.draw(blitzTexture[1], 100, 100, 100, 100);
-        }else if( diff>=3000){
-            batch.draw(blitzTexture[2], 100, 100, 100, 100);
-        }else if( diff>=2000){
-            batch.draw(blitzTexture[3], 100, 100, 100, 100);
-        }else if( diff>=1000){
-            batch.draw(blitzTexture[4], 100, 100, 100, 100);
-        }else {
-            batch.draw(blitzTexture[5], 100, 100, 100, 100);
-        }
-    }
+
 }

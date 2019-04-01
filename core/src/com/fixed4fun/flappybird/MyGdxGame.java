@@ -6,85 +6,76 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
-
 
 import java.util.Random;
 
 
 public class MyGdxGame extends ApplicationAdapter {
     static SpriteBatch batch;
-    private Texture background;
-    private ShapeRenderer shapeRenderer;
     static Texture[] blitzTexture;
-
-    static Texture[] birds;
-    static int flapState = 0;
-    static float birdY = 0;
-    static float birdX = 0;
+    static Texture[] catTexture;
+    static int catState = 0;
+    static float catPositionY = 0;
+    static float catPositionX = 0;
     static float velocity = 0;
-    int gameState = 0;
     static float gravity = 1.7f;
-
-    private Circle birdCircle;
     static Rectangle[] topTubeRectangles;
     static Rectangle[] bottomTubeRectangles;
-
     static int score = 0;
-    int activeTube;
-    BitmapFont font;
-
-    static Texture topTube;
-    static Texture bottomTube;
+    static Texture leftTube;
+    static Texture rightTube;
     static float gap = 300;
     static float screenX = 0;
-    static float screenY =0;
-    static float lewoPrawo = 0;
+    static float screenY = 0;
     static float leftOrRight = 0;
+    static float tiltPower = 0;
     static float maxTubeOffSet;
     static Random randomGenerator;
-
-
-    static int numberOfTubes =6;
+    static int numberOfTubes = 6;
     static float[] tubeX = new float[numberOfTubes];
-    static float[] tubeOffset =new float[numberOfTubes];
+    static float[] tubeOffset = new float[numberOfTubes];
     static float distanceBetweenTubes;
+    int gameState = 0;
+    int activeTube;
+    BitmapFont font;
+    private Texture background;
+    private Circle catAreaCircle;
 
-
-
+    public static void setCatState(int catState) {
+        MyGdxGame.catState = catState;
+    }
 
     @Override
     public void create() {
         batch = new SpriteBatch();
         background = new Texture("bg.png");
-        birds = new Texture[2];
-        birds[0] = new Texture("bird.png");
-        birds[1] = new Texture("bird2.png");
-        birdY = Gdx.graphics.getHeight() / 2 - birds[flapState].getHeight() / 2;
-        birdX = Gdx.graphics.getWidth() / 2 - birds[flapState].getWidth() / 2;
-        shapeRenderer = new ShapeRenderer();
-        birdCircle = new Circle();
+        catTexture = new Texture[9];
+        catTexture[0] = new Texture("dol-lewo.png");
+        catTexture[1] = new Texture("lewo.png");
+        catTexture[2] = new Texture("gora-lewo.png");
+        catTexture[3] = new Texture("gora.png");
+        catTexture[4] = new Texture("gora-prawo.png");
+        catTexture[5] = new Texture("prawo.png");
+        catTexture[6] = new Texture("dol-prawo.png");
+        catTexture[7] = new Texture("dol.png");
+        catTexture[8] = new Texture("srodek.png");
+
+
+        catPositionY = Gdx.graphics.getHeight() / 2 - catTexture[catState].getHeight() / 2;
+        catPositionX = Gdx.graphics.getWidth() / 2 - catTexture[catState].getWidth() / 2;
+        catAreaCircle = new Circle();
 
         font = new BitmapFont();
         font.setColor(Color.WHITE);
         font.getData().scale(10);
 
 
-        blitzTexture = new Texture[6];
-        blitzTexture[0] = new Texture("bird.png");
-        blitzTexture[1] = new Texture("blitz1.png");
-        blitzTexture[2] = new Texture("blitz2.png");
-        blitzTexture[3] = new Texture("blitz3.png");
-        blitzTexture[4] = new Texture("blitz4.png");
-        blitzTexture[5] = new Texture("blitz5.png");
-
-
-        topTube = new Texture("toptube.png");
-        bottomTube = new Texture("bottomtube.png");
-        maxTubeOffSet = Gdx.graphics.getHeight() /2 - gap/2 - 100;
+        leftTube = new Texture("toptube.png");
+        rightTube = new Texture("bottomtube.png");
+        maxTubeOffSet = Gdx.graphics.getHeight() / 2 - gap / 2 - 100;
         randomGenerator = new Random();
         distanceBetweenTubes = Gdx.graphics.getWidth() * 3 / 4;
         topTubeRectangles = new Rectangle[numberOfTubes];
@@ -94,8 +85,6 @@ public class MyGdxGame extends ApplicationAdapter {
         Tubes.createTubes();
     }
 
-
-
     @Override
     public void render() {
 
@@ -104,25 +93,23 @@ public class MyGdxGame extends ApplicationAdapter {
         batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 
-
-
         if (gameState != 0) {
 
-            if(tubeX[activeTube] < birdY){
+            if (tubeX[activeTube] < catPositionY) {
                 score++;
-                if(activeTube < numberOfTubes-1){
+                if (activeTube < numberOfTubes - 1) {
                     activeTube++;
                 } else {
-                    activeTube =0;
+                    activeTube = 0;
                 }
             }
 
             Tubes tubes = new Tubes();
 
-            Steering.easySteering();
+            Steering.hardSteering();
             tubes.tubeDraw();
-            //Tubes.tubeDraw();
             BirdControls.drawBlitzCount();
+            BirdControls.getFlapState();
 
         } else {
             if (Gdx.input.justTouched()) {
@@ -131,38 +118,21 @@ public class MyGdxGame extends ApplicationAdapter {
             }
 
         }
-        if (flapState == 0) {
-            flapState = 1;
-        } else {
-            flapState = 0;
-        }
 
-        batch.draw(birds[flapState], birdX, birdY);
+        batch.draw(catTexture[catState], catPositionX, catPositionY, 100, 100);
 
-        font.draw(batch, String.valueOf(score), Gdx.graphics.getWidth()/2 - 50, Gdx.graphics.getHeight()-300);
-
+        font.draw(batch, String.valueOf(score), Gdx.graphics.getWidth() / 2 - 50, Gdx.graphics.getHeight() - 300);
 
         batch.end();
-        birdCircle.set(birdX+birds[flapState].getWidth()/2, birdY+birds[flapState].getHeight()/2, birds[flapState].getWidth()/2 );
+        catAreaCircle.set(catPositionX + catTexture[catState].getWidth() / 2, catPositionY + catTexture[catState].getHeight() / 2, catTexture[catState].getWidth() / 2);
+
+        for (int i = 0; i < numberOfTubes; i++) {
 
 
-       // shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-      //  shapeRenderer.setColor(Color.RED);
-      //  shapeRenderer.circle(birdCircle.x, birdCircle.y, birdCircle.radius);
-        for(int i =0; i < numberOfTubes ; i++) {
+            if (Intersector.overlaps(catAreaCircle, topTubeRectangles[i]) || Intersector.overlaps(catAreaCircle, bottomTubeRectangles[i])) {
 
-          //  shapeRenderer.rect(Gdx.graphics.getWidth() / 2 + gap / 2 + tubeOffset[i], tubeX[i], topTube.getWidth(), topTube.getHeight());
-         //   shapeRenderer.rect(Gdx.graphics.getWidth() / 2 - gap / 2 - bottomTube.getWidth() + tubeOffset[i], tubeX[i], bottomTube.getWidth(), bottomTube.getHeight());
-
-            if(Intersector.overlaps(birdCircle, topTubeRectangles[i]) ||Intersector.overlaps(birdCircle, bottomTubeRectangles[i])){
-             //   Gdx.app.log("collision", "yes");
-              //  gameState=0;
             }
         }
 
-      //  shapeRenderer.end();
     }
-
-
-
 }

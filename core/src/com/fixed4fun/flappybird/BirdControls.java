@@ -52,9 +52,6 @@ public class BirdControls extends MyGdxGame {
             setCatState(7);
         } else
             setCatState(8);
-
-
-        // return 1;
     }
 
 }

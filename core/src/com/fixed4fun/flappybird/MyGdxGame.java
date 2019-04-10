@@ -32,17 +32,19 @@ public class MyGdxGame extends ApplicationAdapter {
     static float screenY = 0;
     static float leftOrRight = 0;
     static float tiltPower = 0;
-    static float maxTubeOffSet;
     static Random randomGenerator;
     static int numberOfTubes = 6;
     static float[] tubeX = new float[numberOfTubes];
     static float[] tubeOffset = new float[numberOfTubes];
     static float distanceBetweenTubes;
-    int gameState = 0;
+    static int gameState = 0;
     int activeTube;
     BitmapFont font;
     private Texture background;
     private Circle catAreaCircle;
+
+    Texture gameOver;
+
 
     public static void setCatState(int catState) {
         MyGdxGame.catState = catState;
@@ -62,6 +64,7 @@ public class MyGdxGame extends ApplicationAdapter {
         catTexture[6] = new Texture("dol-prawo.png");
         catTexture[7] = new Texture("dol.png");
         catTexture[8] = new Texture("srodek.png");
+        gameOver = new Texture("game_over.jpg");
 
 
         catPositionY = Gdx.graphics.getHeight() / 2 - catTexture[catState].getHeight() / 2;
@@ -75,9 +78,8 @@ public class MyGdxGame extends ApplicationAdapter {
 
         leftTube = new Texture("toptube.png");
         rightTube = new Texture("bottomtube.png");
-        maxTubeOffSet = Gdx.graphics.getHeight() / 2 - gap / 2 - 100;
         randomGenerator = new Random();
-        distanceBetweenTubes = Gdx.graphics.getWidth() * 3 / 4;
+        distanceBetweenTubes = Gdx.graphics.getHeight() *0.5f;
         topTubeRectangles = new Rectangle[numberOfTubes];
         bottomTubeRectangles = new Rectangle[numberOfTubes];
 
@@ -93,7 +95,7 @@ public class MyGdxGame extends ApplicationAdapter {
         batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 
-        if (gameState != 0) {
+        if (gameState ==1) {
 
             if (tubeX[activeTube] < catPositionY) {
                 score++;
@@ -105,18 +107,34 @@ public class MyGdxGame extends ApplicationAdapter {
             }
 
             Tubes tubes = new Tubes();
+            tubes.tubeDraw();
 
             Steering.hardSteering();
-            tubes.tubeDraw();
             BirdControls.drawBlitzCount();
             BirdControls.getFlapState();
 
-        } else {
+        } else if (gameState ==0){
             if (Gdx.input.justTouched()) {
                 gameState = 1;
 
             }
 
+        } else if(gameState ==2){
+            batch.draw(gameOver, Gdx.graphics.getWidth()/2 - gameOver.getWidth()/2 ,
+                    Gdx.graphics.getHeight()/2 - gameOver.getHeight()/2 );
+
+            if (Gdx.input.justTouched()) {
+                gameState = 1;
+                score =0;
+                activeTube =0;
+                velocity=0;
+                tiltPower =0;
+                catPositionY = Gdx.graphics.getHeight() / 2 - catTexture[catState].getHeight() / 2;
+                catPositionX = Gdx.graphics.getWidth() / 2 - catTexture[catState].getWidth() / 2;
+                Tubes.createTubes();
+                Steering.timeFirstClick = System.currentTimeMillis()-60000;
+
+            }
         }
 
         batch.draw(catTexture[catState], catPositionX, catPositionY, 100, 100);
@@ -124,13 +142,14 @@ public class MyGdxGame extends ApplicationAdapter {
         font.draw(batch, String.valueOf(score), Gdx.graphics.getWidth() / 2 - 50, Gdx.graphics.getHeight() - 300);
 
         batch.end();
-        catAreaCircle.set(catPositionX + catTexture[catState].getWidth() / 2, catPositionY + catTexture[catState].getHeight() / 2, catTexture[catState].getWidth() / 2);
+        catAreaCircle.set(catPositionX + catTexture[catState].getWidth() / 2,
+                catPositionY + catTexture[catState].getHeight() / 2, catTexture[catState].getWidth() / 2);
 
         for (int i = 0; i < numberOfTubes; i++) {
 
 
             if (Intersector.overlaps(catAreaCircle, topTubeRectangles[i]) || Intersector.overlaps(catAreaCircle, bottomTubeRectangles[i])) {
-
+                gameState = 2;
             }
         }
 

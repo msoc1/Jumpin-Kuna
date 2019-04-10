@@ -12,7 +12,7 @@ public class Tubes extends MyGdxGame {
 
             tubeOffset[i] = (randomGenerator.nextFloat() - 0.5f) * (Gdx.graphics.getWidth() - gap - 200);
 
-            tubeX[i] = Gdx.graphics.getWidth() / 2 - leftTube.getWidth() / 2 + Gdx.graphics.getWidth() + i * distanceBetweenTubes;
+            tubeX[i] = Gdx.graphics.getHeight() - 400 + i * distanceBetweenTubes;
 
             topTubeRectangles[i] = new Rectangle();
             bottomTubeRectangles[i] = new Rectangle();

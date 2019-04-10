@@ -59,7 +59,7 @@ public class Steering extends MyGdxGame {
             }
         }
 
-        if (catPositionY > 0 || velocity < 0 ) {
+        if (catPositionY > 0 ) {
             if (catPositionX <= 2) {
                 bounceLeft();
             }
@@ -67,6 +67,8 @@ public class Steering extends MyGdxGame {
                 bounceRight();
             }
             moveBird();
+        } else {
+            gameState = 2;
         }
     }
 

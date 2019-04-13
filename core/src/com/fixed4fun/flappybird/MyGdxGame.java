@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
@@ -45,6 +46,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
     Texture gameOver;
 
+    ShapeRenderer shapeRenderer;
 
     public static void setCatState(int catState) {
         MyGdxGame.catState = catState;
@@ -52,8 +54,9 @@ public class MyGdxGame extends ApplicationAdapter {
 
     @Override
     public void create() {
+        shapeRenderer = new ShapeRenderer();
         batch = new SpriteBatch();
-        background = new Texture("bg.png");
+        background = new Texture("bg.jpg");
         catTexture = new Texture[9];
         catTexture[0] = new Texture("dol-lewo.png");
         catTexture[1] = new Texture("lewo.png");
@@ -79,7 +82,7 @@ public class MyGdxGame extends ApplicationAdapter {
         leftTube = new Texture("toptube.png");
         rightTube = new Texture("bottomtube.png");
         randomGenerator = new Random();
-        distanceBetweenTubes = Gdx.graphics.getHeight() *0.5f;
+        distanceBetweenTubes = Gdx.graphics.getHeight() *0.66f;
         topTubeRectangles = new Rectangle[numberOfTubes];
         bottomTubeRectangles = new Rectangle[numberOfTubes];
 
@@ -137,13 +140,20 @@ public class MyGdxGame extends ApplicationAdapter {
             }
         }
 
-        batch.draw(catTexture[catState], catPositionX, catPositionY, 100, 100);
+        batch.draw(catTexture[2], catPositionX, catPositionY, 60, 240);
+
+
 
         font.draw(batch, String.valueOf(score), Gdx.graphics.getWidth() / 2 - 50, Gdx.graphics.getHeight() - 300);
 
         batch.end();
-        catAreaCircle.set(catPositionX + catTexture[catState].getWidth() / 2,
-                catPositionY + catTexture[catState].getHeight() / 2, catTexture[catState].getWidth() / 2);
+        catAreaCircle.set(catPositionX + 40,
+                catPositionY + 80, 50);
+
+      // shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+      // shapeRenderer.setColor(Color.RED);
+       // shapeRenderer.circle(catAreaCircle.x, catAreaCircle.y, catAreaCircle.radius);
+        // shapeRenderer.end();
 
         for (int i = 0; i < numberOfTubes; i++) {
 

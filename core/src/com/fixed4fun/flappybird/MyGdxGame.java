@@ -4,14 +4,14 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 
 import java.util.Random;
+
+import static java.lang.Math.sqrt;
 
 
 public class MyGdxGame extends ApplicationAdapter {
@@ -26,6 +26,7 @@ public class MyGdxGame extends ApplicationAdapter {
     static Rectangle[] topTubeRectangles;
     static Rectangle[] bottomTubeRectangles;
     static int score = 0;
+    static int bestScore = 0;
     static Texture leftTube;
     static Texture rightTube;
     static float gap = 300;
@@ -40,13 +41,16 @@ public class MyGdxGame extends ApplicationAdapter {
     static float distanceBetweenTubes;
     static int gameState = 0;
     int activeTube;
-    BitmapFont font;
-    private Texture background;
-    private Circle catAreaCircle;
-
     Texture gameOver;
+    Texture pressToStart;
+    Texture scoreTexture;
+    Texture[] scores;
+    Texture bestScoreText;
+    private Texture background;
+    private Rectangle catArea;
+ //   ShapeRenderer shapeRenderer;
 
-    ShapeRenderer shapeRenderer;
+
 
     public static void setCatState(int catState) {
         MyGdxGame.catState = catState;
@@ -54,114 +58,178 @@ public class MyGdxGame extends ApplicationAdapter {
 
     @Override
     public void create() {
-        shapeRenderer = new ShapeRenderer();
         batch = new SpriteBatch();
         background = new Texture("bg.jpg");
-        catTexture = new Texture[9];
-        catTexture[0] = new Texture("dol-lewo.png");
-        catTexture[1] = new Texture("lewo.png");
-        catTexture[2] = new Texture("gora-lewo.png");
-        catTexture[3] = new Texture("gora.png");
-        catTexture[4] = new Texture("gora-prawo.png");
-        catTexture[5] = new Texture("prawo.png");
-        catTexture[6] = new Texture("dol-prawo.png");
-        catTexture[7] = new Texture("dol.png");
-        catTexture[8] = new Texture("srodek.png");
-        gameOver = new Texture("game_over.jpg");
+        catTexture = new Texture[3];
+        rightTube = new Texture("left_ice.png");;
+        leftTube = new Texture("right_ice.png");;
+        catTexture[0] = new Texture("left.png");
+        catTexture[1] = new Texture("right.png");
+        catTexture[2] = new Texture("cat_down.png");
 
+      //  shapeRenderer = new ShapeRenderer();
+        scores = new Texture[10];
+        scores[0] = new Texture("zero.png");
+        scores[1] = new Texture("one.png");
+        scores[2] = new Texture("two.png");
+        scores[3] = new Texture("three.png");
+        scores[4] = new Texture("four.png");
+        scores[5] = new Texture("five.png");
+        scores[6] = new Texture("six.png");
+        scores[7] = new Texture("seven.png");
+        scores[8] = new Texture("eight.png");
+        scores[9] = new Texture("nine.png");
+
+        gameOver = new Texture("game_over.png");
+        pressToStart = new Texture("press_to_start.png");
+        scoreTexture = new Texture("score.png");
+        bestScoreText = new Texture("best_score.png");
 
         catPositionY = Gdx.graphics.getHeight() / 2 - catTexture[catState].getHeight() / 2;
         catPositionX = Gdx.graphics.getWidth() / 2 - catTexture[catState].getWidth() / 2;
-        catAreaCircle = new Circle();
-
-        font = new BitmapFont();
-        font.setColor(Color.WHITE);
-        font.getData().scale(10);
+        catArea = new Rectangle();
 
 
-        leftTube = new Texture("toptube.png");
-        rightTube = new Texture("bottomtube.png");
         randomGenerator = new Random();
-        distanceBetweenTubes = Gdx.graphics.getHeight() *0.66f;
+        distanceBetweenTubes = Gdx.graphics.getHeight() * 0.66f;
         topTubeRectangles = new Rectangle[numberOfTubes];
         bottomTubeRectangles = new Rectangle[numberOfTubes];
-
-
         Tubes.createTubes();
     }
 
     @Override
     public void render() {
-
-
         batch.begin();
         batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
+        switch (gameState) {
+            case 0:
+                onStartGame();
+                break;
+            case 1:
+                onGamePlaying();
+                break;
+            case 2:
+                onLostGame();
+                break;
+            case 3:
+                onGameReset();
+                break;
+        }
+        batch.draw(catTexture[catState], catPositionX, catPositionY, 60, 240);
+        batch.end();
+    }
 
-        if (gameState ==1) {
+    public void onStartGame() {
+        batch.draw(pressToStart, Gdx.graphics.getWidth() / 2 - 400,
+                Gdx.graphics.getHeight() / 3 - pressToStart.getHeight(), 800, 580);
+        printBestScore();
 
-            if (tubeX[activeTube] < catPositionY) {
-                score++;
-                if (activeTube < numberOfTubes - 1) {
-                    activeTube++;
-                } else {
-                    activeTube = 0;
-                }
-            }
+        if (Gdx.input.justTouched()) {
+            gameState = 1;
+        }
+    }
 
-            Tubes tubes = new Tubes();
-            tubes.tubeDraw();
+    public void onGamePlaying() {
+        Gdx.app.log("gam", "in game state 1");
+        printScore();
 
-            Steering.hardSteering();
-            BirdControls.drawBlitzCount();
-            BirdControls.getFlapState();
-
-        } else if (gameState ==0){
-            if (Gdx.input.justTouched()) {
-                gameState = 1;
-
-            }
-
-        } else if(gameState ==2){
-            batch.draw(gameOver, Gdx.graphics.getWidth()/2 - gameOver.getWidth()/2 ,
-                    Gdx.graphics.getHeight()/2 - gameOver.getHeight()/2 );
-
-            if (Gdx.input.justTouched()) {
-                gameState = 1;
-                score =0;
-                activeTube =0;
-                velocity=0;
-                tiltPower =0;
-                catPositionY = Gdx.graphics.getHeight() / 2 - catTexture[catState].getHeight() / 2;
-                catPositionX = Gdx.graphics.getWidth() / 2 - catTexture[catState].getWidth() / 2;
-                Tubes.createTubes();
-                Steering.timeFirstClick = System.currentTimeMillis()-60000;
-
+        if (tubeX[activeTube] < catPositionY) {
+            score++;
+            if (activeTube < numberOfTubes - 1) {
+                activeTube++;
+            } else {
+                activeTube = 0;
             }
         }
 
-        batch.draw(catTexture[2], catPositionX, catPositionY, 60, 240);
+        Tubes.tubeDraw();
+        Steering.hardSteering();
+        BirdControls.drawBlitzCount();
+        BirdControls.getFlapState();
 
+       // shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+      //  shapeRenderer.setColor(Color.RED);
+      //  shapeRenderer.rect(catPositionX, catPositionY, 60, 200);
 
-
-        font.draw(batch, String.valueOf(score), Gdx.graphics.getWidth() / 2 - 50, Gdx.graphics.getHeight() - 300);
-
-        batch.end();
-        catAreaCircle.set(catPositionX + 40,
-                catPositionY + 80, 50);
-
-      // shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-      // shapeRenderer.setColor(Color.RED);
-       // shapeRenderer.circle(catAreaCircle.x, catAreaCircle.y, catAreaCircle.radius);
-        // shapeRenderer.end();
 
         for (int i = 0; i < numberOfTubes; i++) {
 
+          //  shapeRenderer.rect(Gdx.graphics.getWidth() / 2 + gap / 2 + tubeOffset[i], tubeX[i]+rightTube.getHeight()*0.2f, leftTube.getWidth(), rightTube.getHeight()*0.6f);
 
-            if (Intersector.overlaps(catAreaCircle, topTubeRectangles[i]) || Intersector.overlaps(catAreaCircle, bottomTubeRectangles[i])) {
+          //  shapeRenderer.rect(Gdx.graphics.getWidth() / 2 - gap / 2 - rightTube.getWidth() + tubeOffset[i], tubeX[i]+rightTube.getHeight()*0.2f, leftTube.getWidth(), rightTube.getHeight()*0.6f);
+
+
+            if (Intersector.overlaps(catArea, topTubeRectangles[i]) || Intersector.overlaps(catArea, bottomTubeRectangles[i])) {
                 gameState = 2;
             }
         }
+        catArea.set(catPositionX, catPositionY+20, 60, 200);
+       // shapeRenderer.end();
+
 
     }
+
+    public void onGameReset() {
+        printBestScore();
+        Gdx.app.log("gam", "in game state 3");
+        batch.draw(pressToStart, Gdx.graphics.getWidth() / 2 - 400,
+                Gdx.graphics.getHeight() / 3 - pressToStart.getHeight(), 800, 580);
+        if (Gdx.input.justTouched()) {
+            Gdx.app.log("gam", "go to game state 1");
+            gameState = 1;
+            score = 0;
+            activeTube = 0;
+            velocity = 0;
+            tiltPower = 0;
+            catPositionY = Gdx.graphics.getHeight() / 2 - catTexture[catState].getHeight() / 2;
+            catPositionX = Gdx.graphics.getWidth() / 2 - catTexture[catState].getWidth() / 2;
+            Tubes.createTubes();
+            Steering.timeFirstClick = System.currentTimeMillis() - 60000;
+        }
+    }
+
+
+    public void onLostGame() {
+        printScore();
+        if (score > bestScore) {
+            bestScore = score;
+        }
+        batch.draw(gameOver, Gdx.graphics.getWidth() / 2 - 400,
+                Gdx.graphics.getHeight() / 2 + 180, 800, 180);
+        catState = 2;
+        Gdx.app.log("gam", "in game state 2");
+        batch.draw(scoreTexture, Gdx.graphics.getWidth() / 2 - scoreTexture.getWidth() / 2, Gdx.graphics.getHeight() - scoreTexture.getHeight());
+        if (Gdx.input.justTouched()) {
+            Gdx.app.log("gam", "go to game state 3");
+            gameState = 3;
+            System.gc();
+        }
+    }
+
+    public void printScore() {
+        if (score < 10) {
+            batch.draw(scores[score], Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() - 400, 150, 210);
+        } else {
+            int firstDigit = score / 10;
+            int secondDigit = score % 10;
+            batch.draw(scores[firstDigit], Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 400, 150, 210);
+            batch.draw(scores[secondDigit], Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() - 400, 150, 210);
+        }
+    }
+
+    public void printBestScore() {
+        batch.draw(bestScoreText, Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 70, 300, 70);
+
+        if (bestScore < 10) {
+            batch.draw(scores[bestScore], Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() - 400, 150, 210);
+        } else {
+            int firstDigit = bestScore / 10;
+            int secondDigit = bestScore % 10;
+            batch.draw(scores[firstDigit], Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 400, 150, 210);
+            batch.draw(scores[secondDigit], Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() - 400, 150, 210);
+        }
+    }
+
+
 }

@@ -53,9 +53,9 @@ public class Steering extends MyGdxGame {
             canHeBlitz();
 
             if (screenX < Gdx.graphics.getWidth()/2) {
-                leftOrRight += 0.4;
-            } else if (screenX > Gdx.graphics.getWidth()/2) {
                 leftOrRight -= 0.4;
+            } else if (screenX > Gdx.graphics.getWidth()/2) {
+                leftOrRight += 0.4;
             }
         }
 
@@ -63,7 +63,7 @@ public class Steering extends MyGdxGame {
             if (catPositionX <= 2) {
                 bounceLeft();
             }
-            if (catPositionX >= Gdx.graphics.getWidth() - catTexture[catState].getWidth()) {
+            if (catPositionX >= Gdx.graphics.getWidth() - 60) {
                 bounceRight();
             }
             moveBird();
@@ -85,8 +85,6 @@ public class Steering extends MyGdxGame {
                 catPositionY += Gdx.graphics.getHeight()/3;
                 canBlitz = false;
             }
-
-
         }
     }
 

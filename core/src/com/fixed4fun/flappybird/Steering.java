@@ -110,8 +110,13 @@ public class Steering extends MyGdxGame {
     }
 
     private static void straigUp() {
-        velocity = velocity + gravity;
+        if(catPositionY+200 >=Gdx.graphics.getHeight() ) {
+            velocity = 12;
+        } else {
+            velocity = velocity + gravity;
+        }
         catPositionY -= velocity;
+
     }
 
 

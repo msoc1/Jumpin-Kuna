@@ -2,7 +2,6 @@ package com.fixed4fun.flappybird;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -10,8 +9,6 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 
 import java.util.Random;
-
-import static java.lang.Math.sqrt;
 
 
 public class MyGdxGame extends ApplicationAdapter {
@@ -40,16 +37,15 @@ public class MyGdxGame extends ApplicationAdapter {
     static float[] tubeOffset = new float[numberOfTubes];
     static float distanceBetweenTubes;
     static int gameState = 0;
+    static Texture gameOver;
+    static Texture pressToStart;
+    static Texture scoreTexture;
+    static Texture[] scores;
+    static Texture bestScoreText;
+    static private Texture background;
+    static private Rectangle catArea;
     int activeTube;
-    Texture gameOver;
-    Texture pressToStart;
-    Texture scoreTexture;
-    Texture[] scores;
-    Texture bestScoreText;
-    private Texture background;
-    private Rectangle catArea;
- //   ShapeRenderer shapeRenderer;
-
+    ShapeRenderer shapeRenderer;
 
 
     public static void setCatState(int catState) {
@@ -59,15 +55,23 @@ public class MyGdxGame extends ApplicationAdapter {
     @Override
     public void create() {
         batch = new SpriteBatch();
+        blitzTexture = new Texture[6];
+        blitzTexture[0] = new Texture("srodek.png");
+        blitzTexture[1] = new Texture("one.png");
+        blitzTexture[2] = new Texture("two.png");
+        blitzTexture[3] = new Texture("three.png");
+        blitzTexture[4] = new Texture("four.png");
+        blitzTexture[5] = new Texture("five.png");
+
         background = new Texture("bg.jpg");
         catTexture = new Texture[3];
-        rightTube = new Texture("left_ice.png");;
-        leftTube = new Texture("right_ice.png");;
+        rightTube = new Texture("left_ice.png");
+        leftTube = new Texture("right_ice.png");
+
         catTexture[0] = new Texture("left.png");
         catTexture[1] = new Texture("right.png");
         catTexture[2] = new Texture("cat_down.png");
-
-      //  shapeRenderer = new ShapeRenderer();
+        shapeRenderer = new ShapeRenderer();
         scores = new Texture[10];
         scores[0] = new Texture("zero.png");
         scores[1] = new Texture("one.png");
@@ -90,18 +94,24 @@ public class MyGdxGame extends ApplicationAdapter {
         catArea = new Rectangle();
 
 
-        randomGenerator = new Random();
-        distanceBetweenTubes = Gdx.graphics.getHeight() * 0.66f;
         topTubeRectangles = new Rectangle[numberOfTubes];
         bottomTubeRectangles = new Rectangle[numberOfTubes];
+        for (int i = 0; i < numberOfTubes; i++) {
+            topTubeRectangles[i] = new Rectangle();
+            bottomTubeRectangles[i] = new Rectangle();
+        }
+
+        randomGenerator = new Random();
+        distanceBetweenTubes = Gdx.graphics.getHeight() * 0.66f;
         Tubes.createTubes();
     }
 
     @Override
     public void render() {
         batch.begin();
+        batch.disableBlending();
         batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
+        batch.enableBlending();
         switch (gameState) {
             case 0:
                 onStartGame();
@@ -148,24 +158,24 @@ public class MyGdxGame extends ApplicationAdapter {
         BirdControls.drawBlitzCount();
         BirdControls.getFlapState();
 
-       // shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-      //  shapeRenderer.setColor(Color.RED);
-      //  shapeRenderer.rect(catPositionX, catPositionY, 60, 200);
+        // shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        //  shapeRenderer.setColor(Color.RED);
+        // shapeRenderer.rect(catPositionX, catPositionY, 60, 200);
 
 
         for (int i = 0; i < numberOfTubes; i++) {
 
-          //  shapeRenderer.rect(Gdx.graphics.getWidth() / 2 + gap / 2 + tubeOffset[i], tubeX[i]+rightTube.getHeight()*0.2f, leftTube.getWidth(), rightTube.getHeight()*0.6f);
+            // shapeRenderer.rect(Gdx.graphics.getWidth() / 2 + gap / 2 + tubeOffset[i], tubeX[i]+rightTube.getHeight()*0.2f, leftTube.getWidth(), rightTube.getHeight()*0.6f);
 
-          //  shapeRenderer.rect(Gdx.graphics.getWidth() / 2 - gap / 2 - rightTube.getWidth() + tubeOffset[i], tubeX[i]+rightTube.getHeight()*0.2f, leftTube.getWidth(), rightTube.getHeight()*0.6f);
+            // shapeRenderer.rect(Gdx.graphics.getWidth() / 2 - gap / 2 - rightTube.getWidth() + tubeOffset[i], tubeX[i]+rightTube.getHeight()*0.2f, leftTube.getWidth(), rightTube.getHeight()*0.6f);
 
 
             if (Intersector.overlaps(catArea, topTubeRectangles[i]) || Intersector.overlaps(catArea, bottomTubeRectangles[i])) {
                 gameState = 2;
             }
         }
-        catArea.set(catPositionX, catPositionY+20, 60, 200);
-       // shapeRenderer.end();
+        catArea.set(catPositionX, catPositionY + 20, 60, 200);
+        // shapeRenderer.end();
 
 
     }
@@ -182,9 +192,16 @@ public class MyGdxGame extends ApplicationAdapter {
             activeTube = 0;
             velocity = 0;
             tiltPower = 0;
+            Tubes.createTubes();
+
+            for (int i = 0; i < numberOfTubes; i++) {
+                topTubeRectangles[i].set(Gdx.graphics.getWidth() / 2 + gap / 2 + tubeOffset[i], tubeX[i] + leftTube.getHeight() * 0.2f+500,
+                        leftTube.getWidth(), leftTube.getHeight() * 0.6f);
+                bottomTubeRectangles[i].set(Gdx.graphics.getWidth() / 2 - gap / 2 - rightTube.getWidth() + tubeOffset[i],
+                        tubeX[i] + leftTube.getHeight() * 0.2f+500, rightTube.getWidth(), rightTube.getHeight() * 0.6f);
+            }
             catPositionY = Gdx.graphics.getHeight() / 2 - catTexture[catState].getHeight() / 2;
             catPositionX = Gdx.graphics.getWidth() / 2 - catTexture[catState].getWidth() / 2;
-            Tubes.createTubes();
             Steering.timeFirstClick = System.currentTimeMillis() - 60000;
         }
     }

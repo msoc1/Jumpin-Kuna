@@ -5,15 +5,9 @@ import com.badlogic.gdx.graphics.Texture;
 public class BirdControls extends MyGdxGame {
 
 
-    public static void drawBlitzCount() {
-        blitzTexture = new Texture[6];
-        blitzTexture[0] = new Texture("srodek.png");
-        blitzTexture[1] = new Texture("one.png");
-        blitzTexture[2] = new Texture("two.png");
-        blitzTexture[3] = new Texture("three.png");
-        blitzTexture[4] = new Texture("four.png");
-        blitzTexture[5] = new Texture("five.png");
+  // static Texture t = new Texture("srodek.png");
 
+    public static void drawBlitzCount() {
         long diff = System.currentTimeMillis() - Steering.timeFirstClick;
         if (diff >= 5000) {
             batch.draw(blitzTexture[0], 100, 100, 100, 100);

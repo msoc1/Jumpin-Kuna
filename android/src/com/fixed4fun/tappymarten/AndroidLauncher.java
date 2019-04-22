@@ -1,10 +1,9 @@
-package com.fixed4fun.flappybird;
+package com.fixed4fun.tappymarten;
 
 import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.fixed4fun.flappybird.MyGdxGame;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override

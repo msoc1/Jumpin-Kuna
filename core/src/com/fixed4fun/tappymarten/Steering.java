@@ -1,11 +1,11 @@
-package com.fixed4fun.flappybird;
+package com.fixed4fun.tappymarten;
 
 import com.badlogic.gdx.Gdx;
 
 
 public class Steering extends MyGdxGame {
     static long timeFirstClick;
-    private static boolean canBlitz= true;
+    private static boolean canBlitz = true;
 
 
     public static void easySteering() {
@@ -19,14 +19,14 @@ public class Steering extends MyGdxGame {
             screenX = Gdx.input.getX();
             screenY = Gdx.input.getY();
 
-           canHeBlitz();
-                if (screenX <= Gdx.graphics.getWidth() / 3) {
-                    leftOrRight -= 0.4;
-                } else if (screenX >= Gdx.graphics.getWidth() * 2 / 3) {
-                    leftOrRight += 0.4;
-                } else if (screenX >= Gdx.graphics.getWidth() / 3 && screenX <= Gdx.graphics.getWidth() * 2 / 3) {
-                    leftOrRight = 0;
-                }
+            canHeBlitz();
+            if (screenX <= Gdx.graphics.getWidth() / 3) {
+                leftOrRight -= 0.4;
+            } else if (screenX >= Gdx.graphics.getWidth() * 2 / 3) {
+                leftOrRight += 0.4;
+            } else if (screenX >= Gdx.graphics.getWidth() / 3 && screenX <= Gdx.graphics.getWidth() * 2 / 3) {
+                leftOrRight = 0;
+            }
 
         }
 
@@ -52,14 +52,14 @@ public class Steering extends MyGdxGame {
             screenY = Gdx.input.getY();
             canHeBlitz();
 
-            if (screenX < Gdx.graphics.getWidth()/2) {
+            if (screenX < Gdx.graphics.getWidth() / 2) {
                 leftOrRight -= 0.4;
-            } else if (screenX > Gdx.graphics.getWidth()/2) {
+            } else if (screenX > Gdx.graphics.getWidth() / 2) {
                 leftOrRight += 0.4;
             }
         }
 
-        if (catPositionY > 0 ) {
+        if (catPositionY > 0) {
             if (catPositionX <= 2) {
                 bounceLeft();
             }
@@ -73,7 +73,7 @@ public class Steering extends MyGdxGame {
     }
 
 
-    private static void canHeBlitz(){
+    private static void canHeBlitz() {
         if (screenX >= 100 && screenX <= blitzTexture[0].getWidth() + 100 && screenY <= Gdx.graphics.getHeight() - 100 &&
                 screenY >= Gdx.graphics.getHeight() - 100 - blitzTexture[0].getHeight()) {
 
@@ -82,7 +82,7 @@ public class Steering extends MyGdxGame {
 
             if (canBlitz) {
                 timeFirstClick = System.currentTimeMillis();
-                catPositionY += Gdx.graphics.getHeight()/3;
+                catPositionY += Gdx.graphics.getHeight() / 3;
                 canBlitz = false;
             }
         }
@@ -110,7 +110,7 @@ public class Steering extends MyGdxGame {
     }
 
     private static void straigUp() {
-        if(catPositionY+200 >=Gdx.graphics.getHeight() ) {
+        if (catPositionY + 200 >= Gdx.graphics.getHeight()) {
             velocity = 12;
         } else {
             velocity = velocity + gravity;

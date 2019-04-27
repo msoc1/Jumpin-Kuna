@@ -1,4 +1,4 @@
-package com.fixed4fun.tappymarten;
+package com.fixed4fun.jumpinkuna;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -46,6 +46,7 @@ public class MyGdxGame extends ApplicationAdapter {
     static private Texture background;
     static private Rectangle catArea;
     private int activeTube;
+    static Texture kuna;
 
     static void setCatState(int catState) {
         MyGdxGame.catState = catState;
@@ -54,7 +55,7 @@ public class MyGdxGame extends ApplicationAdapter {
     @Override
     public void create() {
         batch = new SpriteBatch();
-        background = new Texture("bg.jpg");
+        background = new Texture("bg.png");
         preferences = Gdx.app.getPreferences("game preferences");
 
         blitzTexture = new Texture[6];
@@ -90,6 +91,7 @@ public class MyGdxGame extends ApplicationAdapter {
         bestScoreText = new Texture("best_score.png");
 
 
+        kuna = new Texture("kuna.png");
         rightTube = new Texture("left_ice.png");
         leftTube = new Texture("right_ice.png");
         topTubeRectangles = new Rectangle[numberOfTubes];
@@ -140,8 +142,10 @@ public class MyGdxGame extends ApplicationAdapter {
 
     private void onStartGame() {
         batch.draw(pressToStart, (float)Gdx.graphics.getWidth() / 2 - 400,
-                (float)Gdx.graphics.getHeight() / 3 - pressToStart.getHeight(), 800, 580);
+                (float)Gdx.graphics.getHeight() / 2 - pressToStart.getHeight(), 800, 580);
         printBestScore();
+        batch.draw(kuna,(Gdx.graphics.getWidth() - kuna.getWidth())/2 , 50);
+
 
         if (Gdx.input.justTouched()) {
             gameState = 1;
@@ -149,7 +153,6 @@ public class MyGdxGame extends ApplicationAdapter {
     }
 
     private void onGamePlaying() {
-        Gdx.app.log("gam", "in game state 1");
         printScore();
         if (tubeX[activeTube] < catPositionY) {
             score++;
@@ -159,6 +162,7 @@ public class MyGdxGame extends ApplicationAdapter {
                 activeTube = 0;
             }
         }
+        batch.draw(kuna,(Gdx.graphics.getWidth() - kuna.getWidth())/2 , 50);
 
         Tubes.tubeDraw();
         Steering.hardSteering();
@@ -175,8 +179,10 @@ public class MyGdxGame extends ApplicationAdapter {
 
     private void onGameReset() {
         printBestScore();
+        batch.draw(kuna,(Gdx.graphics.getWidth() - kuna.getWidth())/2 , 50);
+
         batch.draw(pressToStart, (float)Gdx.graphics.getWidth() / 2 - 400,
-                (float)Gdx.graphics.getHeight() / 3 - pressToStart.getHeight(), 800, 580);
+                (float)Gdx.graphics.getHeight() / 2 - pressToStart.getHeight(), 800, 580);
         if (Gdx.input.justTouched()) {
             gameState = 1;
             score = 0;
@@ -200,6 +206,8 @@ public class MyGdxGame extends ApplicationAdapter {
 
     private void onLostGame() {
         printScore();
+        batch.draw(kuna,(Gdx.graphics.getWidth() - kuna.getWidth())/2 , 50);
+
         if (score > loadHighScore()) {
             bestScore = score;
             saveHighScore();
@@ -207,7 +215,7 @@ public class MyGdxGame extends ApplicationAdapter {
         batch.draw(gameOver, (float)Gdx.graphics.getWidth() / 2 - 400,
                 (float)Gdx.graphics.getHeight() / 2 + 180, 800, 180);
         catState = 2;
-        batch.draw(scoreTexture, (float)Gdx.graphics.getWidth() / 2 - (float)scoreTexture.getWidth() / 2, Gdx.graphics.getHeight() - scoreTexture.getHeight());
+        batch.draw(scoreTexture, (float)Gdx.graphics.getWidth() / 2 - (float)scoreTexture.getWidth() / 2, Gdx.graphics.getHeight() - scoreTexture.getHeight()-30);
         if (Gdx.input.justTouched()) {
             gameState = 3;
             System.gc();
@@ -226,7 +234,7 @@ public class MyGdxGame extends ApplicationAdapter {
     }
 
     private void printBestScore() {
-        batch.draw(bestScoreText, (float)Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 70, 300, 70);
+        batch.draw(bestScoreText, (float)Gdx.graphics.getWidth() / 2 - 150, Gdx.graphics.getHeight() - 100, 300, 70);
 
         if (loadHighScore() < 10) {
             batch.draw(scores[loadHighScore()], (float)Gdx.graphics.getWidth() / 2 - 75, Gdx.graphics.getHeight() - 400, 150, 210);

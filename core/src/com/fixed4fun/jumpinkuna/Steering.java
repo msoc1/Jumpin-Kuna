@@ -1,4 +1,4 @@
-package com.fixed4fun.tappymarten;
+package com.fixed4fun.jumpinkuna;
 
 import com.badlogic.gdx.Gdx;
 
@@ -74,8 +74,8 @@ public class Steering extends MyGdxGame {
 
 
     private static void canHeBlitz() {
-        if (screenX >= 100 && screenX <= blitzTexture[0].getWidth() + 100 && screenY <= Gdx.graphics.getHeight() - 100 &&
-                screenY >= Gdx.graphics.getHeight() - 100 - blitzTexture[0].getHeight()) {
+        if (screenX >= 100 && screenX <= blitzTexture[0].getWidth() + 100 && screenY <= Gdx.graphics.getHeight() - 200 &&
+                screenY >= Gdx.graphics.getHeight() - 200 - blitzTexture[0].getHeight()) {
 
             if (System.currentTimeMillis() - timeFirstClick >= 5000)
                 canBlitz = true;

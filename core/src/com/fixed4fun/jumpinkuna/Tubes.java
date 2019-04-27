@@ -1,4 +1,4 @@
-package com.fixed4fun.tappymarten;
+package com.fixed4fun.jumpinkuna;
 
 import com.badlogic.gdx.Gdx;
 
@@ -16,7 +16,7 @@ public class Tubes extends MyGdxGame {
     }
 
     protected static void tubeDraw() {
-        float tubeVelocity = (float) (7 + (sqrt(score) * 2f));
+        float tubeVelocity = (float) (7 + (sqrt(score) * 2.45f));
 
         for (int i = 0; i < numberOfTubes; i++) {
 
@@ -27,7 +27,6 @@ public class Tubes extends MyGdxGame {
 
             } else {
                 tubeX[i] = tubeX[i] - tubeVelocity;
-                Gdx.app.log("tube", "tubevelovity: " + tubeVelocity);
             }
 
             if (tubeX[i] + leftTube.getHeight() < 0 || tubeX[i] > Gdx.graphics.getHeight()) {

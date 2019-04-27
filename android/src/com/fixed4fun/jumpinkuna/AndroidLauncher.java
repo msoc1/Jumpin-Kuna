@@ -1,4 +1,4 @@
-package com.fixed4fun.tappymarten;
+package com.fixed4fun.jumpinkuna;
 
 import android.os.Bundle;
 

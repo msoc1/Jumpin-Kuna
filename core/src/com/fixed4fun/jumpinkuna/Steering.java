@@ -44,8 +44,10 @@ public class Steering extends MyGdxGame {
 
     public static void hardSteering() {
 
+        float changeDir = Gdx.graphics.getWidth() * 0.00037037037f;
+
         if (Gdx.input.justTouched()) {
-            velocity = -25;
+            velocity = -Gdx.graphics.getHeight()*0.014f;
             leftOrRight = 0;
             tiltPower = 0;
             screenX = Gdx.input.getX();
@@ -53,9 +55,9 @@ public class Steering extends MyGdxGame {
             canHeBlitz();
 
             if (screenX < Gdx.graphics.getWidth() / 2) {
-                leftOrRight -= 0.4;
+                leftOrRight -= changeDir;
             } else if (screenX > Gdx.graphics.getWidth() / 2) {
-                leftOrRight += 0.4;
+                leftOrRight += changeDir;
             }
         }
 
@@ -63,7 +65,7 @@ public class Steering extends MyGdxGame {
             if (catPositionX <= 2) {
                 bounceLeft();
             }
-            if (catPositionX >= Gdx.graphics.getWidth() - 60) {
+            if (catPositionX >= Gdx.graphics.getWidth() - Gdx.graphics.getWidth()* 0.055f) {
                 bounceRight();
             }
             moveBird();
@@ -74,8 +76,8 @@ public class Steering extends MyGdxGame {
 
 
     private static void canHeBlitz() {
-        if (screenX >= 100 && screenX <= blitzTexture[0].getWidth() + 100 && screenY <= Gdx.graphics.getHeight() - 200 &&
-                screenY >= Gdx.graphics.getHeight() - 200 - blitzTexture[0].getHeight()) {
+        if (screenX >= BirdControls.blitzPositionX && screenX <= blitzTexture[0].getWidth() + BirdControls.blitzPositionX  && screenY <= Gdx.graphics.getHeight() - BirdControls.blitzPositionY &&
+                screenY >= Gdx.graphics.getHeight() - BirdControls.blitzPositionY - blitzTexture[0].getHeight()) {
 
             if (System.currentTimeMillis() - timeFirstClick >= 5000)
                 canBlitz = true;
@@ -90,15 +92,15 @@ public class Steering extends MyGdxGame {
 
 
     private static void bounceLeft() {
-        leftOrRight = (float) 0.6;
-        tiltPower = 1.7f;
+        leftOrRight = (float) Gdx.graphics.getWidth()*0.00055555555f;
+        tiltPower = Gdx.graphics.getWidth()*0.00157407407f;
         tiltPower = tiltPower + leftOrRight;
         catPositionX += tiltPower;
     }
 
     private static void bounceRight() {
-        leftOrRight = (float) -0.6;
-        tiltPower = -1.7f;
+        leftOrRight = (float) -Gdx.graphics.getWidth()*0.00055555555f;
+        tiltPower = -Gdx.graphics.getWidth()*0.00157407407f;
         tiltPower = tiltPower + leftOrRight;
         catPositionX -= tiltPower;
     }
@@ -110,8 +112,8 @@ public class Steering extends MyGdxGame {
     }
 
     private static void straigUp() {
-        if (catPositionY + 200 >= Gdx.graphics.getHeight()) {
-            velocity = 12;
+        if (catPositionY + Gdx.graphics.getHeight()*0.133f >= Gdx.graphics.getHeight()) {
+            velocity = Gdx.graphics.getWidth()*0.01111f;
         } else {
             velocity = velocity + gravity;
         }

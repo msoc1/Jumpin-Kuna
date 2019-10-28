@@ -47,7 +47,8 @@ public class Steering extends MyGdxGame {
         float changeDir = Gdx.graphics.getWidth() * 0.00037037037f;
 
         if (Gdx.input.justTouched()) {
-            velocity = -Gdx.graphics.getHeight()*0.014f;
+            MyGdxGame.howManyJumps++;
+            velocity = (float) -0.014f * Gdx.graphics.getHeight();
             leftOrRight = 0;
             tiltPower = 0;
             screenX = Gdx.input.getX();
@@ -76,8 +77,8 @@ public class Steering extends MyGdxGame {
 
 
     private static void canHeBlitz() {
-        if (screenX >= BirdControls.blitzPositionX && screenX <= blitzTexture[0].getWidth() + BirdControls.blitzPositionX  && screenY <= Gdx.graphics.getHeight() - BirdControls.blitzPositionY &&
-                screenY >= Gdx.graphics.getHeight() - BirdControls.blitzPositionY - blitzTexture[0].getHeight()) {
+        if (screenX >= KunaControls.blitzPositionX && screenX <= blitzTexture[0].getWidth() + KunaControls.blitzPositionX  && screenY <= Gdx.graphics.getHeight() - KunaControls.blitzPositionY &&
+                screenY >= Gdx.graphics.getHeight() - KunaControls.blitzPositionY - blitzTexture[0].getHeight()) {
 
             if (System.currentTimeMillis() - timeFirstClick >= 5000)
                 canBlitz = true;

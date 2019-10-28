@@ -51,9 +51,9 @@ public class Tubes extends MyGdxGame {
                 bottomTubeRectangles[i].set(Gdx.graphics.getWidth() / 2 - gap / 2 - tubeWidth*1.05f + tubeOffset[i],tubeX[i] + tubeHeight * 0.2f ,
                         tubeWidth, tubeHeight * 0.65f);
 
-                leftCircles[i].set(Gdx.graphics.getWidth() / 2 + gap / 2 + tubeOffset[i] + tubeWidth*0.02f, tubeX[i] + tubeHeight * 0.7f , Gdx.graphics.getWidth()*0.032f);
+                leftCircles[i].set(Gdx.graphics.getWidth() / 2 + gap / 2 + tubeOffset[i] + tubeWidth*0.02f, tubeX[i] + tubeHeight * 0.7f , Gdx.graphics.getWidth()*0.03f);
 
-                rightCircles[i].set(Gdx.graphics.getWidth() / 2 - gap / 2 - tubeWidth*0.02f + tubeOffset[i], tubeX[i] + tubeHeight * 0.7f , Gdx.graphics.getWidth()*0.032f);
+                rightCircles[i].set(Gdx.graphics.getWidth() / 2 - gap / 2 - tubeWidth*0.02f + tubeOffset[i], tubeX[i] + tubeHeight * 0.7f , Gdx.graphics.getWidth()*0.03f);
 
 
 

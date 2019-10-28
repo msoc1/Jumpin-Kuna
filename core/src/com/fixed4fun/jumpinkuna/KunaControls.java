@@ -2,7 +2,7 @@ package com.fixed4fun.jumpinkuna;
 
 import com.badlogic.gdx.Gdx;
 
-public class BirdControls extends MyGdxGame {
+public class KunaControls extends MyGdxGame {
 
 
     static float width = Gdx.graphics.getWidth()*0.0833f;

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "931514258184",
+    "firebase_url": "https://jumpinkuna.firebaseio.com",
+    "project_id": "jumpinkuna",
+    "storage_bucket": "jumpinkuna.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:931514258184:android:e0daa7316b52d4a07e12bd",
+        "android_client_info": {
+          "package_name": "com.fixed4fun.jumpinkuna"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "931514258184-dlc5mi6kv0ti2d851v7dcohl51jao3hh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fixed4fun.jumpinkuna",
+            "certificate_hash": "3f73abeed99793404f5f10f4c5d0c765a18a1aa5"
+          }
+        },
+        {
+          "client_id": "931514258184-68q3aop6314biitgcmqprp0b72s966b1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCJKm6B2t6OmSE7I_UND0-AQiSSdzRgfw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "931514258184-68q3aop6314biitgcmqprp0b72s966b1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
